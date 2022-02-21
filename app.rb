@@ -10,24 +10,32 @@ before do
 end
 
 get '/' do
-  'こんばんはー'
-end
-
-get '/count' do
-  @number = Count.first.number
+  @counts = Count.all.order(id: "ASC")
   erb :index
 end
 
-post '/plus' do
-  count = Count.first
+post '/plus/:id' do
+  count = Count.find(params[:id])
   count.number = count.number + 1
   count.save
-  redirect '/count'
+  redirect '/'
 end
 
-post '/minus' do
-  count = Count.first
+post '/minus/:id' do
+  count = Count.find(params[:id])
   count.number = count.number - 1
   count.save
-  redirect '/count'
+  redirect '/'
+end
+
+post '/clear/:id' do
+  count = Count.find(params[:id])
+  count.number = 0
+  count.save
+  redirect '/'
+end
+
+post '/newcount' do
+  Count.create(number: 0)
+  redirect'/'
 end
